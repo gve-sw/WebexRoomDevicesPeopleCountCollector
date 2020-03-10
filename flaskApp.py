@@ -97,12 +97,12 @@ def getPeopleCount():
                               reading=peopleCount)
                 db.session.add(peopleCountEntry)
                 db.session.commit()
-            else:
-                #add random data for now to populate the DB
-                peopleCountEntry = peopleCountTbl(deviceID=device['id'], timestamp=int(time.time()),
-                              reading=random.randint(1,9))
-                db.session.add(peopleCountEntry)
-                db.session.commit()
+#            else:
+#                #add random data for now to populate the DB
+#                peopleCountEntry = peopleCountTbl(deviceID=device['id'], timestamp=int(time.time()),
+#                              reading=random.randint(1,9))
+#                db.session.add(peopleCountEntry)
+#                db.session.commit()
         else:
             print(f"Error occured on device {device['id']} with status code: ",resp.status_code)
 
