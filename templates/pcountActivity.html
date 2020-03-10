@@ -1,0 +1,111 @@
+<!--
+Copyright (c) 2020 Cisco and/or its affiliates.
+
+This software is licensed to you under the terms of the Cisco Sample
+Code License, Version 1.1 (the "License"). You may obtain a copy of the
+License at
+
+               https://developer.cisco.com/docs/licenses
+
+All use of the material herein must be in accordance with the terms of
+the License. All rights not expressly granted by the License are
+reserved. Unless required by applicable law or agreed to separately in
+writing, software distributed under the License is distributed on an "AS
+IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied.
+-->
+{% extends "base.html" %}
+
+{% block title %}People Count Activity{% endblock %}
+
+{% block pageTitle %}People Count Activity{% endblock %}
+
+{% block section1title %}
+<h2>Average Persons per hour</h2>
+<h5><b>From:</b> {{start_stamp}} <b>to</b> {{end_stamp}} </h5>
+
+{% endblock %}
+
+<!--Table-->
+{% block section1content %}
+
+{% for id in dIDs %}
+<canvas id="bar-chart-pcount-activity-{{loop.index}}" width="800" height="250"></canvas>
+{% endfor %}
+<!--
+
+<div class="responsive-table">
+  <table class="table table--lined table--compressed">
+
+    <thead>
+      <tr bgcolor="#7EF5FA" align="center">
+        <th>Hour</th>
+        <th>Average person count</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% set count = 0 %}
+    {% for hourAverage in x %}
+     <tr>
+        <td>{{ loop.index - 1 }}</td>
+        <td>{{ hourAverage }}</td>
+      </tr>
+    {% set count = count + 1 %}
+    {% endfor %}
+
+    </tbody>
+
+  </table>
+</div>
+
+-->
+
+{% endblock %}
+
+
+{% block js %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script>
+     // Bar chart
+
+{% for id in dIDs %}
+new Chart(document.getElementById("bar-chart-pcount-activity-{{loop.index}}"), {
+    type: 'bar',
+    data: {
+      labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
+      datasets: [
+        {
+          label: "Persons",
+          backgroundColor: [
+              {% for color in colors %}
+              "{{ color }}",
+              {% endfor %}
+          ],
+
+          data: [
+              {% set index = loop.index -1 | int %}
+              {% for hourAverage in x[index] %}
+               "{{ hourAverage }}",
+              {% endfor %}
+
+          ]
+        }
+      ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: '{{id}}'
+      }
+    }
+});
+
+{% endfor %}
+
+    </script>
+
+
+{% endblock %}

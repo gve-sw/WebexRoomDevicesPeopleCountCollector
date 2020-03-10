@@ -1,0 +1,16 @@
+[
+    {
+        "id": "Device1",
+        "location": "lab1",
+        "ipAddress" : "0.0.0.0",
+        "username" : "user",
+        "password" : "pwd"
+    },
+    {
+        "id": "Device2",
+        "location": "Lab2",
+        "ipAddress" : "0.0.0.0",
+        "username" : "user",
+        "password" : "pwd"
+    }
+]

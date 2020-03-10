@@ -1,0 +1,6 @@
+xmltodict
+requests
+apscheduler
+Flask
+Flask-GoogleCharts
+Flask-SQLAlchemy
