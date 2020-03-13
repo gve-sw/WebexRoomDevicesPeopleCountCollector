@@ -1,3 +1,7 @@
+| :exclamation:  External repository notice   |
+|:---------------------------|
+| This repository is now mirrored at https://github.com/gve-sw/WebexRoomDevicesPeopleCountCollector. Please inform a https://github.com/gve-sw/ organization admin of any changes to mirror them to the external repo |
+
 # Webex Room Device People Count Collector
 
 This sample code retrieves peoplecount data from Cisco Webex Collaboration Room Devices periodically
@@ -6,8 +10,9 @@ the name of the devices.
 
 ![Main page](Images/PeopleCountCollector.png)
 
-In this setup page, accessible from the cogwheel icon on the top right, you can set the time period to consider for
-calculating hourly averages and any filtering you want to do on the Device IDs (i.e. RoomKit* will limit the list to only devices with IDs start with RoomKit)
+In this initial setup page, accessible from the cogwheel icon on the top right, you can set the initial time period to consider for
+calculating hourly averages and any initial filtering you want to do on the Device IDs (i.e. RoomKit* will limit the list to only devices with IDs start with RoomKit)
+You can always change the start and stop dates and select a specific device from a dropdown list when viewing the main page as you can see above.
 
 ![Setup](Images/CollectorSetup.png)
 
