@@ -1,9 +1,12 @@
 """
-Copyright (c) 2019 Cisco and/or its affiliates.
+Copyright (c) 2020 Cisco and/or its affiliates.
+
 This software is licensed to you under the terms of the Cisco Sample
 Code License, Version 1.1 (the "License"). You may obtain a copy of the
 License at
+
                https://developer.cisco.com/docs/licenses
+
 All use of the material herein must be in accordance with the terms of
 the License. All rights not expressly granted by the License are
 reserved. Unless required by applicable law or agreed to separately in
@@ -153,11 +156,42 @@ def pcountActivity():
     data = []
     reader = peopleCountTbl.query.all()
 
-    setupEntry = Setup.query.order_by(Setup.id.desc()).first().__dict__
-    print(setupEntry)
-    theStartStamp = str(setupEntry.get('start_stamp'))
-    theEndStamp = str(setupEntry.get('end_stamp'))
-    theDevIDFilter = setupEntry.get('deviceIDfilter')
+    if request.method == 'POST':
+
+        theChoiceStr=request.form.get('dropdown_choice')
+        # theDevIDFilter should contain either nothing (if they selected --All--)
+        # or the exact name of the device as selected from the dropdown
+        print(theChoiceStr)
+        if theChoiceStr=="--All--":
+            theDevIDFilter=""
+        else:
+            theDevIDFilter=theChoiceStr
+
+        # now we extract the start end stamps detected
+        testStart = request.form.get('start-time')
+        # if you do not modify the datetime field in the form after setting from DB, it adds seconds
+        # which we need to remove
+        if testStart[-3:] == ":00" and len(testStart) > 16:
+            testStart = testStart[:-3]
+
+        testEnd = request.form.get('end-time')
+        # if you do not modify the datetime field in the form after setting from DB, it adds seconds
+        # which we need to remove
+        if testEnd[-3:] == ":00" and len(testEnd) > 16:
+            testEnd = testEnd[:-3]
+
+        theStartStamp = datetime.strptime(testStart, "%Y-%m-%dT%H:%M")
+        theEndStamp = datetime.strptime(testEnd, "%Y-%m-%dT%H:%M")
+        #put the time stamps in the same format as they come back from the DB
+        #to re-use the code that processes them between the GET and POST
+        theStartStamp = str(theStartStamp).replace("T", " ")
+        theEndStamp = str(theEndStamp).replace("T", " ")
+    else:
+        setupEntry = Setup.query.order_by(Setup.id.desc()).first().__dict__
+        print(setupEntry)
+        theStartStamp = str(setupEntry.get('start_stamp'))
+        theEndStamp = str(setupEntry.get('end_stamp'))
+        theDevIDFilter = setupEntry.get('deviceIDfilter')
 
     count = 0
     arrayCount=0
@@ -166,6 +200,7 @@ def pcountActivity():
     newData=[]
     numReadings=[]
     deviceIDs=[]
+    fullListDeviceIDs=[]
 
     for row in reader:
         # retrieve each row and create data structures in memory to keep the last
@@ -173,7 +208,12 @@ def pcountActivity():
         #print(row.deviceID)
         #print(row.timestamp)
         #print(row.reading)
-        # first check to see if the timestamp from the DB is in the time period we are interested in calculating
+
+        #first populate the entire list of devices to be able to have a functional dropdown selector
+        if row.deviceID not in fullListDeviceIDs:
+            fullListDeviceIDs.append(row.deviceID)
+
+        # second check to see if the timestamp from the DB is in the time period we are interested in calculating
         # average for
         posixStartStamp=time.mktime(datetime.strptime(theStartStamp, "%Y-%m-%d %H:%M:%S").timetuple())
         posixEndStamp=time.mktime(datetime.strptime(theEndStamp, "%Y-%m-%d %H:%M:%S").timetuple())
@@ -183,7 +223,7 @@ def pcountActivity():
             #if it is, figure out which hour of the day the reading belongs to, using local timezone
             theLocalTimeStruct=time.localtime(row.timestamp)
             theHour=theLocalTimeStruct.tm_hour
-            print("theHour=",theHour)
+            #print("theHour=",theHour)
             #if we have not seen this device before, add it to the list
             if row.deviceID not in deviceIDs:
                 deviceIDs.append(row.deviceID)
@@ -206,8 +246,11 @@ def pcountActivity():
     for x in range(0,25):
         randomColor = "#{:06x}".format(random.randint(0, 0xFFFFFF))
         graphColors.append(randomColor)
+    #fix timestamps so selection widget can correctly read them
+    theStartStamp=str(theStartStamp).replace(" ","T")
+    theEndStamp=str(theEndStamp).replace(" ","T")
+    return render_template("pcountActivity.html",x=newData,dIDs=deviceIDs, fullDIDs=fullListDeviceIDs ,start_stamp=theStartStamp, end_stamp=theEndStamp, colors=graphColors)
 
-    return render_template("pcountActivity.html",x=newData,dIDs=deviceIDs,start_stamp=theStartStamp, end_stamp=theEndStamp, colors=graphColors)
 
 
 # this is for the GET to show the overview

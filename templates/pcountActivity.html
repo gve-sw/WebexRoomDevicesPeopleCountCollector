@@ -22,12 +22,36 @@ or implied.
 
 {% block section1title %}
 <h2>Average Persons per hour</h2>
-<h5><b>From:</b> {{start_stamp}} <b>to</b> {{end_stamp}} </h5>
+<form class="form-signin" method="POST" action="{{ url_for('pcountActivity')}}">
+<label for="start-time" class="sr-only">Choose Start Time:</label>
+           <input type="datetime-local" id="start-time"
+                  name="start-time" value="{{start_stamp}}">
+     <label for="end-time" class="sr-only">  Choose End Time:</label>
+           <input type="datetime-local" id="end-time"
+                  name="end-time" value="{{end_stamp}}">
 
+    <div class="col-md-3 base-margin-bottom">
+
+        <div class="form-group dropdown">
+            <div class="form-group__text select">
+                <input id="select-state-default" value="--All--" name="dropdown_choice">
+                <label for="select-state-default">Device:</label>
+            </div>
+            <div class="dropdown__menu" id="dropdown_choice" >
+                <a>--All--</a>
+                {% for theOption in fullDIDs %}
+                <a>{{theOption}}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit"><b>Submit</b></button>
+  </form>
 {% endblock %}
 
 <!--Table-->
 {% block section1content %}
+
 
 {% for id in dIDs %}
 <canvas id="bar-chart-pcount-activity-{{loop.index}}" width="800" height="250"></canvas>
