@@ -1,7 +1,3 @@
-| :exclamation:  External repository notice   |
-|:---------------------------|
-| This repository is now mirrored at https://github.com/gve-sw/WebexRoomDevicesPeopleCountCollector. Please inform a https://github.com/gve-sw/ organization admin of any changes to mirror them to the external repo |
-
 # Webex Room Device People Count Collector
 
 This sample code retrieves peoplecount data from Cisco Webex Collaboration Room Devices periodically
