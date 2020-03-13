@@ -217,12 +217,7 @@ def pcountActivity():
         # average for
         posixStartStamp=time.mktime(datetime.strptime(theStartStamp, "%Y-%m-%d %H:%M:%S").timetuple())
         posixEndStamp=time.mktime(datetime.strptime(theEndStamp, "%Y-%m-%d %H:%M:%S").timetuple())
-        try:
-            regex=re.compile(theDevIDFilter)
-        except:
-            theDevIDFilter=""
-            regex = re.compile(theDevIDFilter)
-
+        regex=re.compile(theDevIDFilter)
         matches=re.findall(regex,row.deviceID)
         if (row.timestamp >= posixStartStamp) and (row.timestamp <= posixEndStamp) and (matches!=[]):
             #if it is, figure out which hour of the day the reading belongs to, using local timezone
@@ -254,14 +249,7 @@ def pcountActivity():
     #fix timestamps so selection widget can correctly read them
     theStartStamp=str(theStartStamp).replace(" ","T")
     theEndStamp=str(theEndStamp).replace(" ","T")
-    #set the dropdown value to the selected device if only one, or to --All-- if more than one was filtered
-    #in initial seup
-    if len(deviceIDs)==1:
-        selectedDiD=deviceIDs[0]
-    else:
-        selectedDiD='--All--'
-
-    return render_template("pcountActivity.html",x=newData,dIDs=deviceIDs, the_selection=selectedDiD ,fullDIDs=fullListDeviceIDs ,start_stamp=theStartStamp, end_stamp=theEndStamp, colors=graphColors)
+    return render_template("pcountActivity.html",x=newData,dIDs=deviceIDs, fullDIDs=fullListDeviceIDs ,start_stamp=theStartStamp, end_stamp=theEndStamp, colors=graphColors)
 
 
 
